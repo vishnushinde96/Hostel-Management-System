@@ -106,6 +106,27 @@
         .btn-delete:hover {
             background-color: #c0392b;
         }
+
+        @media (max-width: 768px) {
+            .custom-table {
+                table-layout: auto !important;
+                /* मोबाईलवर टेबलला आपोआप अॅडजस्ट होऊ देईल */
+                font-size: 13px;
+            }
+
+            .custom-table th,
+            .custom-table td {
+                padding: 8px 6px;
+                word-wrap: normal;
+                white-space: nowrap;
+                /* मोबाईलवर अक्षरं उभी न दिखिता एका ओळीत राहतील */
+            }
+
+            .table-card {
+                padding: 15px;
+                /* मोबाईलवर साईडची मोकळी जागा कमी करण्यासाठी */
+            }
+        }
     </style>
 </head>
 
