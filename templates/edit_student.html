@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student | Hostel Management System</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .form-outer-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+            padding: 20px 0;
+        }
+
+        .admin-form-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            padding: 35px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #e67e22;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background-color: #e67e22;
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+        }
+
+        .btn-submit:hover {
+            background-color: #d35400;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background-color: #7f8c8d;
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #95a5a6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Starts -->
+        <aside class="sidebar">
+            <div>
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-person-running"></i>
+                    </div>
+                    <div class="logo-text">HOSTEL MANAGEMENT</div>
+                </div>
+
+                <ul class="menu-list">
+                    <li class="menu-item"><a href="/dashboard" class="menu-link"><i class="fa-solid fa-table-cells-large"></i><span>Dashboard</span></a></li>
+                    <li class="menu-item"><a href="/student_records" class="menu-link active"><i class="fa-regular fa-folder-open"></i><span>Student Records</span></a></li>
+                    <li class="menu-item"><a href="/add_student" class="menu-link"><i class="fa-solid fa-plus"></i><span>Add Student</span></a></li>
+                    <li class="menu-item"><a href="/rooms" class="menu-link"><i class="fa-solid fa-bed"></i><span>Rooms</span></a></li>
+                    <li class="menu-item"><a href="/fees" class="menu-link"><i class="fa-solid fa-indian-rupee-sign"></i><span>Fees</span></a></li>
+                    <li class="menu-item"><a href="/all_admins" class="menu-link"><i class="fa-solid fa-users"></i><span>All Admins</span></a></li>
+                </ul>
+            </div>
+
+            <a href="/logout" class="logout-btn"><span>Logout</span></a>
+        </aside>
+        <!-- Sidebar Ends -->
+
+        <!-- Main Content Starts -->
+        <main class="main-content">
+            <div class="form-outer-wrapper">
+                <div class="admin-form-card">
+                    <h2 class="form-title"><i class="fa-solid fa-user-pen"></i> Edit Student Details</h2>
+
+                    <form method="POST" autocomplete="off">
+                        <!-- Room No Dropdown -->
+                        <div class="form-group">
+                            <label>Select Room</label>
+                            <select name="room_no" required>
+                                {% for room in rooms %}
+                                <option value="{{ room.room_number }}" {% if room.room_number|string == student.room_no|string %}selected{% endif %}>
+                                    Room {{ room.room_number }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Name Validation -->
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" value="{{ student.name }}" 
+                                   pattern="[A-Za-z\s]+" title="Name must contain letters only" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select name="gender" required>
+                                <option value="Male" {% if student.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if student.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if student.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Class</label>
+                            <input type="text" name="class_name" value="{{ student.class_name }}" required>
+                        </div>
+
+                        <!-- Mobile No Validation -->
+                        <div class="form-group">
+                            <label>Mobile No</label>
+                            <input type="text" name="mobile_no" value="{{ student.mobile_no }}" 
+                                   maxlength="10" minlength="10" pattern="\d{10}" 
+                                   title="Mobile Number must be exactly 10 digits" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                        </div>
+
+                        <!-- Aadhaar No Validation -->
+                        <div class="form-group">
+                            <label>Aadhaar No</label>
+                            <input type="text" name="aadhaar_no" value="{{ student.aadhaar_no }}" 
+                                   maxlength="12" minlength="12" pattern="\d{12}" 
+                                   title="Aadhaar Number must be exactly 12 digits" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea name="address" rows="3" required>{{ student.address }}</textarea>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="submit" class="btn-submit">Update Student</button>
+                            <a href="{{ url_for('student_records') }}" class="btn-cancel">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+        <!-- Main Content Ends -->
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <script>
+        Swal.fire({
+            title: "{% if category == 'success' %}Success!{% else %}Error!{% endif %}",
+            text: "{{ message }}",
+            icon: "{{ 'error' if category == 'danger' else category }}",
+            confirmButtonColor: "#e67e22"
+        });
+    </script>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+</body>
+
+</html>

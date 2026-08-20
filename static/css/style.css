@@ -1,0 +1,862 @@
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #172033;
+    background: #ffffff;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.custom-navbar {
+    background: #101828;
+    padding: 16px 0;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #2563eb;
+}
+
+.brand-highlight {
+    color: #60a5fa;
+}
+
+.custom-navbar .nav-link {
+    color: #cbd5e1;
+    font-weight: 500;
+    padding: 8px 14px !important;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link.active {
+    color: #ffffff;
+}
+
+.nav-login-btn {
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero-section {
+    background:
+        radial-gradient(circle at 90% 20%, #dbeafe 0, transparent 28%),
+        linear-gradient(135deg, #f8fbff, #ffffff);
+
+    padding: 55px 0 75px;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 9px 15px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-size: clamp(42px, 5vw, 68px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -2px;
+    max-width: 650px;
+}
+
+.hero-title span {
+    display: block;
+    color: #2563eb;
+}
+
+.hero-text {
+    max-width: 570px;
+    margin-top: 22px;
+    color: #667085;
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.hero-btn {
+    padding: 13px 24px;
+    border-radius: 9px;
+    font-weight: 600;
+}
+
+.hero-outline-btn {
+    padding: 13px 24px;
+    border-radius: 9px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   HERO STATS
+========================= */
+
+.hero-stats {
+    display: flex;
+    gap: 45px;
+    margin-top: 42px;
+}
+
+.hero-stats div {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-stats strong {
+    font-size: 24px;
+}
+
+.hero-stats span {
+    color: #667085;
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+
+/* =========================
+   DASHBOARD PREVIEW
+========================= */
+
+.dashboard-preview {
+    background: #ffffff;
+    border: 1px solid #e4e7ec;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 25px 60px rgba(16, 24, 40, 0.12);
+    max-width: 520px;
+    margin: auto;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.preview-header small {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.preview-header h5 {
+    margin: 4px 0 0;
+    font-weight: 700;
+}
+
+.preview-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================
+   PREVIEW STATS
+========================= */
+
+.preview-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.preview-stat {
+    border: 1px solid #eaecf0;
+    padding: 17px;
+    border-radius: 12px;
+    display: flex;
+    gap: 13px;
+    align-items: center;
+}
+
+.preview-stat small {
+    color: #667085;
+}
+
+.preview-stat h4 {
+    margin: 3px 0 0;
+    font-weight: 700;
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+.stat-icon.blue {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.stat-icon.green {
+    background: #ecfdf3;
+    color: #16a34a;
+}
+
+
+/* =========================
+   OCCUPANCY
+========================= */
+
+.occupancy-card {
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 14px;
+}
+
+.occupancy-card span {
+    color: #667085;
+    font-size: 14px;
+}
+
+.occupancy-card strong {
+    color: #2563eb;
+}
+
+.progress {
+    height: 8px;
+    background: #e5e7eb;
+}
+
+.progress-bar {
+    background: #2563eb;
+}
+
+
+/* =========================
+   BOOKINGS
+========================= */
+
+.recent-booking {
+    margin-top: 20px;
+}
+
+.booking-title {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 13px;
+}
+
+.booking-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.student-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #dbeafe;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.booking-item strong {
+    display: block;
+    font-size: 14px;
+}
+
+.booking-item small {
+    display: block;
+    color: #667085;
+    font-size: 12px;
+}
+
+.status-badge {
+    background: #ecfdf3;
+    color: #15803d;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   FEATURES
+========================= */
+
+.features-section {
+    padding: 90px 0;
+    background: #ffffff;
+}
+
+.section-heading span {
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.section-heading h2 {
+    font-size: 40px;
+    font-weight: 400;
+    margin-top: 12px;
+}
+
+.section-heading h2 strong {
+    font-weight: 800;
+}
+
+.section-heading p {
+    color: #667085;
+    max-width: 600px;
+    margin: 15px auto 0;
+    line-height: 1.7;
+}
+
+.feature-card {
+    height: 100%;
+    border: 1px solid #eaecf0;
+    border-radius: 15px;
+    padding: 27px;
+    transition: 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 35px rgba(16, 24, 40, 0.08);
+    border-color: #bfdbfe;
+}
+
+.feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.feature-card h5 {
+    font-weight: 700;
+}
+
+.feature-card p {
+    color: #667085;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+
+/* =========================
+   CTA
+========================= */
+
+.cta-section {
+    padding: 20px 0 80px;
+}
+
+.cta-box {
+    background: #1d4ed8;
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.cta-box span {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    opacity: 0.8;
+}
+
+.cta-box h2 {
+    margin: 8px 0;
+    font-size: 32px;
+    font-weight: 750;
+}
+
+.cta-box p {
+    margin: 0;
+    opacity: 0.85;
+}
+
+.cta-btn {
+    padding: 13px 22px;
+    border-radius: 9px;
+    color: #1d4ed8;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    background: #101828;
+    color: #98a2b3;
+    padding: 55px 0 25px;
+}
+
+.footer-brand {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.footer h6 {
+    color: #ffffff;
+    margin-bottom: 17px;
+}
+
+.footer a {
+    display: block;
+    color: #98a2b3;
+    margin-bottom: 9px;
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+.footer p {
+    line-height: 1.7;
+}
+
+.footer hr {
+    border-color: #344054;
+    margin: 35px 0 20px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 991px) {
+
+    .hero-section {
+        padding-top: 40px;
+    }
+
+    .hero-title {
+        letter-spacing: -1px;
+    }
+
+    .dashboard-preview {
+        margin-top: 20px;
+    }
+
+    .cta-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .custom-navbar {
+        padding: 12px 0;
+    }
+
+    .hero-section {
+        padding: 35px 0 55px;
+    }
+
+    .hero-title {
+        font-size: 42px;
+    }
+
+    .hero-text {
+        font-size: 16px;
+    }
+
+    .hero-stats {
+        gap: 25px;
+    }
+
+    .hero-stats strong {
+        font-size: 20px;
+    }
+
+    .dashboard-preview {
+        padding: 18px;
+        border-radius: 15px;
+    }
+
+    .preview-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .features-section {
+        padding: 65px 0;
+    }
+
+    .section-heading h2 {
+        font-size: 32px;
+    }
+
+    .cta-box {
+        padding: 30px 25px;
+    }
+
+    .cta-box h2 {
+        font-size: 26px;
+    }
+}
+/* =========================
+   DASHBOARD & SIDEBAR STYLING
+========================= */
+
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 15px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.logo-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    margin-bottom: 12px;
+}
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: #bdc3c7;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.menu-link i {
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+.menu-link:hover, 
+.menu-link.active {
+    background-color: #e67e22; /* Image matching Orange Highlight */
+    color: #ffffff;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background-color: #e74c3c;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+
+/* Main Content Area */
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 30px;
+    background-color: #f4f6f9;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.dashboard-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #172033;
+    margin: 0;
+}
+
+.user-welcome {
+    color: #667085;
+    font-size: 14px;
+}
+
+/* Empty Content Container */
+.blank-content-box {
+    background: #ffffff;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    padding: 30px;
+    min-height: 80vh;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.05);
+}
+
+/* Responsive Sidebar Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+        padding: 15px 8px;
+    }
+
+    .logo-text, 
+    .menu-link span, 
+    .logout-btn span {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 70px;
+        padding: 20px;
+    }
+}
+/* =========================
+   ADD STUDENT FORM STYLING
+========================= */
+
+.form-container {
+    background: #ffffff;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 700px;
+    margin: 20px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #172033;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #e67e22;
+}
+
+.submit-btn {
+    width: 100%;
+    background-color: #e67e22;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 25px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #d35400;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+}
+/* =========================
+   ACTION BUTTONS FIX
+========================= */
+
+.action-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* बटणांमध्ये अंतर */
+    white-space: nowrap; /* ओव्हरलॅप रोखण्यासाठी */
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+.btn-update {
+    background-color: #3498db;
+    color: #ffffff !important;
+}
+
+.btn-update:hover {
+    background-color: #2980b9;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: #ffffff !important;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}

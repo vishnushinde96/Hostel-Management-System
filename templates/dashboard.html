@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Hostel Management System</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS File -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Starts -->
+        <aside class="sidebar">
+            <div>
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-person-running"></i>
+                    </div>
+                    <div class="logo-text">HOSTEL MANAGEMENT</div>
+                </div>
+
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a href="/dashboard" class="menu-link active">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="/student_records" class="menu-link">
+                            <i class="fa-regular fa-folder-open"></i>
+                            <span>Student Records</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="/add_student" class="menu-link">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add Student</span>
+                        </a>
+                    </li>
+                   
+                    <li class="menu-item">
+                        <a href="/rooms" class="menu-link">
+                            <i class="fa-solid fa-bed"></i>
+                            <span>Rooms</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="/fees" class="menu-link">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <span>Fees</span>
+                        </a>
+                    </li>
+                     <!-- <li class="menu-item">
+                        <a href="/add_admin" class="menu-link">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Add Admin</span>
+                        </a>
+                    </li> -->
+                    <li class="menu-item">
+                        <a href="/all_admins" class="menu-link">
+                            <i class="fa-solid fa-users"></i>
+                            <span>All Admins</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <a href="/logout" class="logout-btn">
+                <span>Logout</span>
+            </a>
+        </aside>
+        <!-- Sidebar Ends -->
+
+        <!-- Main Content Starts -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Dashboard</h1>
+                <span class="user-welcome">Welcome, {{ current_user.email if current_user.is_authenticated else 'User' }}</span>
+            </div>
+
+            <!-- 4 Cards Layout -->
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+                <!-- Total Students Card -->
+                <div style="flex: 1; min-width: 200px; max-width: 250px; background: #6c5ce7; color: white; padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <p style="margin: 0; font-size: 15px; font-weight: 600; opacity: 0.9;">Total Students</p>
+                    <h2 style="margin: 10px 0 0 0; font-size: 32px; font-weight: 700;">{{ total_students }}</h2>
+                </div>
+
+                <!-- Total Admins Card -->
+                <div style="flex: 1; min-width: 200px; max-width: 250px; background: #00b894; color: white; padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <p style="margin: 0; font-size: 15px; font-weight: 600; opacity: 0.9;">Total Admins</p>
+                    <h2 style="margin: 10px 0 0 0; font-size: 32px; font-weight: 700;">{{ total_admins }}</h2>
+                </div>
+
+                <!-- Total Rooms Card -->
+                <div style="flex: 1; min-width: 200px; max-width: 250px; background: #0984e3; color: white; padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <p style="margin: 0; font-size: 15px; font-weight: 600; opacity: 0.9;">Total Rooms</p>
+                    <h2 style="margin: 10px 0 0 0; font-size: 32px; font-weight: 700;">{{ total_rooms }}</h2>
+                </div>
+
+                <!-- Available Rooms Card -->
+                <div style="flex: 1; min-width: 200px; max-width: 250px; background: #e17055; color: white; padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <p style="margin: 0; font-size: 15px; font-weight: 600; opacity: 0.9;">Available Rooms</p>
+                    <h2 style="margin: 10px 0 0 0; font-size: 32px; font-weight: 700;">{{ available_rooms_count }}</h2>
+                </div>
+            </div>
+
+            <!-- Recently Added Students Table Section -->
+            <div style="background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; margin-bottom: 20px; color: #2d3436; font-size: 20px;">Recently Added Students</h3>
+                
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background-color: #34495e; color: #ffffff;">
+                            <th style="padding: 12px 15px; border-top-left-radius: 6px;">Sr No</th>
+                            <th style="padding: 12px 15px;">Room No</th>
+                            <th style="padding: 12px 15px;">Name</th>
+                            <th style="padding: 12px 15px;">Class</th>
+                            <th style="padding: 12px 15px; border-top-right-radius: 6px;">Mobile No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_students %}
+                            {% for student in recent_students %}
+                            <tr style="border-bottom: 1px solid #edf2f7;">
+                                <td style="padding: 12px 15px;">{{ loop.index }}</td>
+                                <td style="padding: 12px 15px;">{{ student.room_no }}</td>
+                                <td style="padding: 12px 15px; font-weight: 600; color: #2d3436;">{{ student.name }}</td>
+                                <td style="padding: 12px 15px;">{{ student.class_name }}</td>
+                                <td style="padding: 12px 15px;">{{ student.mobile_no }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #a0aec0; padding: 20px;">No recent students found.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <!-- Main Content Ends -->
+    </div>
+
+</body>
+
+</html>

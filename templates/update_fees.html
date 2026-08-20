@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Fees | Hostel Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .form-outer-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+            padding: 20px 0;
+        }
+
+        .admin-form-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 550px;
+            padding: 35px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        /* Search Section CSS */
+        .search-box-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+
+        .search-box-wrapper input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-search {
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-search:hover {
+            background-color: #2980b9;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        /* Read-only inputs साठी style */
+        .form-group input[readonly] {
+            background-color: #f1f2f6;
+            color: #7f8c8d;
+            cursor: not-allowed;
+            border-color: #dcdde1;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #e67e22;
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover { 
+            background-color: #d35400; 
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .alert-danger { background-color: #f8d7da; color: #721c24; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+
+        /* Download Modal Popup Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-icon {
+            font-size: 45px;
+            color: #27ae60;
+            margin-bottom: 12px;
+        }
+
+        .modal-box h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        .modal-box p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-modal {
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-block;
+        }
+
+        .btn-yes {
+            background-color: #27ae60;
+            color: #ffffff;
+        }
+
+        .btn-yes:hover {
+            background-color: #219150;
+        }
+
+        .btn-no {
+            background-color: #e74c3c;
+            color: #ffffff;
+        }
+
+        .btn-no:hover {
+            background-color: #c0392b;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div>
+                <div class="logo-section">
+                    <div class="logo-icon"><i class="fa-solid fa-person-running"></i></div>
+                    <div class="logo-text">HOSTEL MANAGEMENT</div>
+                </div>
+
+                <ul class="menu-list">
+                    <li class="menu-item"><a href="/dashboard" class="menu-link"><i class="fa-solid fa-table-cells-large"></i><span>Dashboard</span></a></li>
+                    <li class="menu-item"><a href="/student_records" class="menu-link"><i class="fa-regular fa-folder-open"></i><span>Student Records</span></a></li>
+                    <li class="menu-item"><a href="/add_student" class="menu-link"><i class="fa-solid fa-plus"></i><span>Add Student</span></a></li>
+                    <!-- <li class="menu-item"><a href="/add_admin" class="menu-link"><i class="fa-solid fa-user-plus"></i><span>Add Admin</span></a></li> -->
+                    
+                    <li class="menu-item"><a href="/rooms" class="menu-link"><i class="fa-solid fa-bed"></i><span>Rooms</span></a></li>
+                    <li class="menu-item"><a href="/fees" class="menu-link active"><i class="fa-solid fa-indian-rupee-sign"></i><span>Fees</span></a></li>
+                    <li class="menu-item"><a href="/all_admins" class="menu-link"><i class="fa-solid fa-users"></i><span>All Admins</span></a></li>
+                </ul>
+            </div>
+
+            <a href="/login" class="logout-btn"><span>Logout</span></a>
+        </aside>
+
+        <main class="main-content">
+            <div class="form-outer-wrapper">
+                <div class="admin-form-card">
+                    <h2 class="form-title">Update Fee Details</h2>
+
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                          <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+
+                    <!-- Search Form -->
+                    <form action="/update_fees" method="GET" class="search-box-wrapper">
+                        <input type="text" name="mobile_no" placeholder="Enter Mobile Number..." value="{{ searched_mobile if searched_mobile else '' }}" required>
+                        <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                    </form>
+
+                    <!-- Main Update Form -->
+                    {% if fee %}
+                    <form action="/update_fees" method="POST">
+                        <input type="hidden" name="fee_id" value="{{ fee.id }}">
+
+                        <!-- Fixed Fields (Read-Only) -->
+                        <div class="form-group">
+                            <label>Room No</label>
+                            <input type="text" value="Room {{ fee.student.room_no }}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Student Name</label>
+                            <input type="text" value="{{ fee.student.name }}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mobile No</label>
+                            <input type="text" value="{{ fee.student.mobile_no }}" readonly>
+                        </div>
+
+                        <!-- Editable Fields -->
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <input type="text" name="duration" value="{{ fee.duration }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Amount (₹)</label>
+                            <input type="number" step="0.01" name="amount" value="{{ fee.amount }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select name="status" required>
+                                <option value="Pending" {% if fee.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Paid" {% if fee.status == 'Paid' %}selected{% endif %}>Paid</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Save Fee Status</button>
+                    </form>
+                    {% else %}
+                        <p style="text-align: center; color: #7f8c8d; margin-top: 20px;">
+                            Enter student mobile number and click <strong>Search</strong> to update fee details.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+   <!-- Receipt Download Popup Modal -->
+<div id="receiptModal" class="modal-overlay" data-show="{{ 'true' if show_popup else 'false' }}">
+    <div class="modal-box">
+        <div class="modal-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+        <h3>Fee Status Saved Successfully!</h3>
+        <p>Do you want to download the payment receipt?</p>
+        <div class="modal-buttons">
+            {% if fee %}
+            <!-- Yes दाबल्यावर रिसिप्ट डाऊनलोड होईल आणि १ सेकंदाने fees.html वर रीडायरेक्ट होईल -->
+            <a href="/download_receipt/{{ fee.id }}" class="btn-modal btn-yes" onclick="redirectAfterDownload()">Yes</a>
+            {% endif %}
+            
+            <!-- No दाबल्यावर थेट fees.html वर रीडायरेक्ट होईल -->
+            <button type="button" class="btn-modal btn-no" onclick="closeAndRedirect()">No</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 'No' बटनवर क्लिक केल्यावर डायरेक्ट fees.html वर पाठवण्यासाठी
+    function closeAndRedirect() {
+        window.location.href = "{{ url_for('fees') }}";
+    }
+
+    // 'Yes' दाबल्यावर रिसिप्ट डाऊनलोड सुरू होईल आणि १ सेकंदाने fees.html वर नेईल
+    function redirectAfterDownload() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('fees') }}";
+        }, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById('receiptModal');
+        if (modal && modal.getAttribute('data-show') === 'true') {
+            modal.style.display = 'flex';
+        }
+    });
+</script>
+
+</body>
+
+</html>

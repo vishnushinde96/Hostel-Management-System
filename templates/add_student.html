@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student | Hostel Management System</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- SweetAlert2 CSS & JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Starts -->
+        <aside class="sidebar">
+            <div>
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-person-running"></i>
+                    </div>
+                    <div class="logo-text">HOSTEL MANAGEMENT</div>
+                </div>
+
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a href="/dashboard" class="menu-link">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="/student_records" class="menu-link">
+                            <i class="fa-regular fa-folder-open"></i>
+                            <span>Student Records</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="/add_student" class="menu-link active">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add Student</span>
+                        </a>
+                    </li>
+                   
+                    <li class="menu-item">
+                        <a href="/rooms" class="menu-link">
+                            <i class="fa-solid fa-bed"></i>
+                            <span>Rooms</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="/fees" class="menu-link">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            <span>Fees</span>
+                        </a>
+                    </li>
+                     <!-- <li class="menu-item">
+                        <a href="/add_admin" class="menu-link">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Add Admin</span>
+                        </a>
+                    </li> -->
+                    <li class="menu-item">
+                        <a href="/all_admins" class="menu-link">
+                            <i class="fa-solid fa-users"></i>
+                            <span>All Admins</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <a href="{{ url_for('login') }}" class="logout-btn">
+                <span>Logout</span>
+            </a>
+        </aside>
+        <!-- Sidebar Ends -->
+
+        <!-- Main Content Starts -->
+        <main class="main-content">
+            <div class="form-container">
+                <h2 class="form-title">Enter student details</h2>
+
+                <form action="{{ url_for('add_student') }}" method="POST">
+                    <div class="form-grid">
+                        <!-- Room No -->
+                        <div class="form-group">
+                            <label for="room_no">Select Room</label>
+                            <select name="room_no" id="room_no" class="form-control" required>
+                                <option value="" disabled selected>Select Room</option>
+                                {% for room in rooms %}
+                                <option value="{{ room.room_number }}">Room {{ room.room_number }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Name Validation: Only letters and spaces -->
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter Student Name" 
+                                   pattern="[A-Za-z\s]+" title="Name must contain letters only" required>
+                        </div>
+
+                        <!-- Class -->
+                        <div class="form-group">
+                            <label for="class_name">Class</label>
+                            <input type="text" id="class_name" name="class_name" placeholder="Enter Class" required>
+                        </div>
+
+                        <!-- Mobile No Validation: Exactly 10 digits -->
+                        <div class="form-group">
+                            <label for="mobile_no">Mobile No</label>
+                            <input type="tel" id="mobile_no" name="mobile_no" placeholder="Enter 10-digit Mobile Number"
+                                   maxlength="10" minlength="10" pattern="\d{10}" 
+                                   title="Mobile Number must be exactly 10 digits" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                        </div>
+
+                        <!-- Aadhaar No Validation: Exactly 12 digits -->
+                        <div class="form-group">
+                            <label for="aadhaar_no">Aadhaar No</label>
+                            <input type="text" id="aadhaar_no" name="aadhaar_no" placeholder="Enter 12-digit Aadhaar Number"
+                                   maxlength="12" minlength="12" pattern="\d{12}" 
+                                   title="Aadhaar Number must be exactly 12 digits" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group full-width">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" rows="3" placeholder="Enter Full Address" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn">+ Add Student</button>
+                </form>
+            </div>
+        </main>
+        <!-- Main Content Ends -->
+    </div>
+
+    <!-- Flash Messages साठी SweetAlert2 Script -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <script>
+        Swal.fire({
+            title: "{% if category == 'success' %}Success!{% else %}Error!{% endif %}",
+            text: "{{ message }}",
+            icon: "{{ category }}",
+            confirmButtonColor: "#e67e22",
+            confirmButtonText: "OK"
+        });
+    </script>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+</body>
+
+</html>
