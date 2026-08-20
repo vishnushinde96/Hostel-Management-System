@@ -20,6 +20,7 @@
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             margin-top: 20px;
+            box-sizing: border-box;
         }
 
         .page-header {
@@ -49,10 +50,16 @@
             background-color: #d35400;
         }
 
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
         .custom-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            table-layout: fixed;
         }
 
         .custom-table th,
@@ -61,6 +68,8 @@
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
             font-size: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .custom-table th {
@@ -80,13 +89,14 @@
             font-family: monospace;
             color: #2c3e50;
             font-weight: 600;
+            letter-spacing: 2px;
         }
 
         .btn-delete {
             background-color: #e74c3c;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
@@ -131,7 +141,7 @@
                             <span>Add Student</span>
                         </a>
                     </li>
-                 
+
                     <li class="menu-item">
                         <a href="/rooms" class="menu-link">
                             <i class="fa-solid fa-bed"></i>
@@ -144,12 +154,6 @@
                             <span>Fees</span>
                         </a>
                     </li>
-                       <!-- <li class="menu-item">
-                        <a href="/add_admin" class="menu-link">
-                            <i class="fa-solid fa-user-plus"></i>
-                            <span>Add Admin</span>
-                        </a>
-                    </li> -->
                     <li class="menu-item">
                         <a href="/all_admins" class="menu-link active">
                             <i class="fa-solid fa-users"></i>
@@ -173,39 +177,40 @@
                     <a href="/add_admin" class="btn-add"><i class="fa-solid fa-plus"></i> Add Admin</a>
                 </div>
 
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Sr No</th>
-                            <th>Email Address</th>
-                            <th>Password</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for admin in admins %}
-                        <tr>
-                            <!-- 🔴 admin.id ऐवजी loop.index जोडले आहे -->
-                            <td>{{ loop.index }}</td>
-                            <td>{{ admin.email }}</td>
-                            <td><span class="password-badge">{{ admin.password }}</span></td>
-                            <td>
-                                <form id="delete-form-{{ admin.id }}" action="/delete_admin/{{ admin.id }}"
-                                    method="POST" style="display:inline;">
-                                    <button type="button" class="btn-delete"
-                                        onclick="confirmDelete('{{ admin.id }}', '{{ admin.email }}')">
-                                        <i class="fa-solid fa-trash"></i> Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: #7f8c8d;">No Admin Records Found.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">Sr No</th>
+                                <th style="width: 45%;">Email Address</th>
+                                <th style="width: 25%;">Password</th>
+                                <th style="width: 20%; text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admin in admins %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ admin.email }}</td>
+                                <td><span class="password-badge">••••••••</span></td>
+                                <td style="text-align: center;">
+                                    <form id="delete-form-{{ admin.id }}" action="/delete_admin/{{ admin.id }}"
+                                        method="POST" style="display:inline;">
+                                        <button type="button" class="btn-delete"
+                                            onclick="confirmDelete('{{ admin.id }}', '{{ admin.email }}')">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #7f8c8d;">No Admin Records Found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
         <!-- Main Content Ends -->
