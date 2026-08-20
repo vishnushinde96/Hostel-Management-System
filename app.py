@@ -21,6 +21,7 @@ from pdf_generator import generate_fee_receipt
 from routes import main_bp
 from sqlalchemy import text
 from whatsapp_service import send_whatsapp_receipt
+from models import User
 
 
 def verify_database_connection(app):
@@ -34,6 +35,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
+
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
@@ -582,6 +584,29 @@ def create_app(config_class=Config):
             download_name="Students_List.xlsx",
             as_attachment=True,
         )
+
+    with app.app_context():
+        db.create_all()  # टेबल्स तयार होतील
+
+        # User मॉडेल इम्पोर्ट करा
+        from models import (
+            User,
+        )  # जर models.py बाहेर असेल तर 'from models import User' वापरा
+
+        # जर हा ईमेल डेटाबेसमध्ये नसेल, तर नवीन Admin बनवा
+        if not User.query.filter_by(email="admin@gmail.com").first():
+            # जर तुम्ही werkzeug पासवर्ड हॅशिंग वापरत असाल:
+            from werkzeug.security import generate_password_hash
+
+            hashed_password = generate_password_hash("admin123")
+
+            admin_user = User(
+                email="admin@gmail.com",
+                password=hashed_password,  # किंवा थेट "admin123" जर हॅशिंग नसेल तर
+            )
+            db.session.add(admin_user)
+            db.session.commit()
+            print("Default admin created!")
 
     return app
 
