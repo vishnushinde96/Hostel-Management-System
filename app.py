@@ -20,8 +20,8 @@ from models import Fee, Room, Student, User
 from pdf_generator import generate_fee_receipt
 from routes import main_bp
 from sqlalchemy import text
+from werkzeug.security import generate_password_hash, check_password_hash
 from whatsapp_service import send_whatsapp_receipt
-from models import User
 
 
 def verify_database_connection(app):
@@ -35,13 +35,25 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
-
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
     verify_database_connection(app)
+
+    # --- डेटाबेस टेबल्स आणि डिफॉल्ट Admin युझर ऑटो-क्रिएशन ---
     with app.app_context():
         db.create_all()
+
+        existing_admin = User.query.filter_by(email="admin@gmail.com").first()
+        if not existing_admin:
+            hashed_password = generate_password_hash("admin123")
+            admin_user = User(
+                email="admin@gmail.com",
+                password=hashed_password,
+            )
+            db.session.add(admin_user)
+            db.session.commit()
+            print("Default admin created successfully!")
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -69,7 +81,7 @@ def create_app(config_class=Config):
     def index():
         return render_template("index.html")
 
-    # --- Login Route ---
+    # --- Login Route (Fixed Password Hashing Check) ---
     @app.route("/login", methods=["GET", "POST"])
     def login():
         if request.method == "POST":
@@ -78,7 +90,11 @@ def create_app(config_class=Config):
 
             user = User.query.filter_by(email=email).first()
 
-            if user and user.password == password:
+            # हॅश केलेला पासवर्ड किंवा प्लेन टेक्स्ट पासवर्ड दोन्ही सपोर्ट करेल
+            if user and (
+                check_password_hash(user.password, password)
+                or user.password == password
+            ):
                 login_user(user)
                 return redirect(url_for("dashboard"))
             else:
@@ -90,12 +106,9 @@ def create_app(config_class=Config):
     @login_required
     def logout():
         logout_user()
-        session.clear()  # सर्व सेशन नष्ट करा
+        session.clear()
 
-        # युझरला 'index' पेजवर रिडायरेक्ट करा
         response = make_response(redirect(url_for("index")))
-
-        # कुकीज डिलीट करा आणि कॅश पूर्ण बंद करा
         response.delete_cookie("session")
         response.headers["Cache-Control"] = (
             "no-cache, no-store, must-revalidate, private"
@@ -110,20 +123,15 @@ def create_app(config_class=Config):
     def dashboard():
         total_students = Student.query.count()
         total_admins = User.query.count()
-
-        # १. Total Rooms मोजा
         total_rooms = Room.query.count()
 
-        # २. Available Rooms मोजा (ज्या रूममध्ये ४ पेक्षा कमी विद्यार्थी राहतात)
         all_rooms = Room.query.all()
         available_rooms_count = 0
         for room in all_rooms:
-            # त्या रूम क्रमांकावर किती विद्यार्थी आहेत ते मोजा
             student_count = Student.query.filter_by(room_no=room.room_number).count()
-            if student_count < 4:  # ४ पेक्षा कमी जागा असल्यास Available मानले जाईल
+            if student_count < 4:
                 available_rooms_count += 1
 
-        # ३. नुकतेच (Recently) ॲड केलेले ५ विद्यार्थी मिळवा (नवीन ते जुने ऑर्डर)
         recent_students = Student.query.order_by(Student.id.desc()).limit(5).all()
 
         return render_template(
@@ -148,9 +156,7 @@ def create_app(config_class=Config):
             gender = request.form.get("gender")
             address = request.form.get("address")
 
-            # ----------------- VALIDATIONS ----------------- #
-
-            # 1. Name Validation (अंक नकोत, फक्त अक्षरे)
+            # 1. Name Validation
             if not re.match(r"^[a-zA-A-zA-Z\s]+$", name):
                 flash(
                     "Name should contain letters only! Numbers are not allowed.",
@@ -158,12 +164,11 @@ def create_app(config_class=Config):
                 )
                 return redirect(url_for("add_student"))
 
-            # 2. Mobile Number Validation (१० digits)
+            # 2. Mobile Number Validation
             if not re.match(r"^\d{10}$", mobile_no):
                 flash("Mobile number must be exactly 10 digits!", "danger")
                 return redirect(url_for("add_student"))
 
-            # Mobile Number Uniqueness Check
             existing_mobile = Student.query.filter_by(mobile_no=mobile_no).first()
             if existing_mobile:
                 flash(
@@ -172,12 +177,11 @@ def create_app(config_class=Config):
                 )
                 return redirect(url_for("add_student"))
 
-            # 3. Aadhaar Number Validation (१२ digits)
+            # 3. Aadhaar Number Validation
             if not re.match(r"^\d{12}$", aadhaar_no):
                 flash("Aadhaar number must be exactly 12 digits!", "danger")
                 return redirect(url_for("add_student"))
 
-            # Aadhaar Number Uniqueness Check
             existing_aadhaar = Student.query.filter_by(aadhaar_no=aadhaar_no).first()
             if existing_aadhaar:
                 flash(
@@ -185,8 +189,6 @@ def create_app(config_class=Config):
                     "danger",
                 )
                 return redirect(url_for("add_student"))
-
-            # ------------------------------------------------ #
 
             current_student_count = Student.query.filter_by(room_no=room_no).count()
             if current_student_count >= 4:
@@ -209,7 +211,6 @@ def create_app(config_class=Config):
             db.session.add(new_student)
             db.session.commit()
 
-            # बाय-डीफॉल्ट Fee Entry
             new_fee = Fee(
                 student_id=new_student.id,
                 duration="1 Month (01-01-2026 to 01-02-2026)",
@@ -231,14 +232,14 @@ def create_app(config_class=Config):
 
         return render_template("add_student.html", rooms=available_rooms)
 
-    # --- 1. View All Students Route ---
+    # --- View All Students Route ---
     @app.route("/student_records")
     @login_required
     def student_records():
         students = Student.query.all()
         return render_template("student_records.html", students=students)
 
-    # --- 2. Update/Edit Student Route ---
+    # --- Update/Edit Student Route ---
     @app.route("/edit_student/<int:id>", methods=["GET", "POST"])
     @login_required
     def edit_student(id):
@@ -253,9 +254,6 @@ def create_app(config_class=Config):
             gender = request.form.get("gender")
             address = request.form.get("address")
 
-            # ----------------- VALIDATIONS ----------------- #
-
-            # 1. Name Validation
             if not re.match(r"^[a-zA-A-zA-Z\s]+$", name):
                 flash(
                     "Name should contain letters only! Numbers are not allowed.",
@@ -263,12 +261,10 @@ def create_app(config_class=Config):
                 )
                 return redirect(url_for("edit_student", id=id))
 
-            # 2. Mobile Number Validation
             if not re.match(r"^\d{10}$", mobile_no):
                 flash("Mobile number must be exactly 10 digits!", "danger")
                 return redirect(url_for("edit_student", id=id))
 
-            # Mobile Uniqueness Check
             existing_mobile = Student.query.filter(
                 Student.mobile_no == mobile_no, Student.id != id
             ).first()
@@ -279,12 +275,10 @@ def create_app(config_class=Config):
                 )
                 return redirect(url_for("edit_student", id=id))
 
-            # 3. Aadhaar Number Validation
             if not re.match(r"^\d{12}$", aadhaar_no):
                 flash("Aadhaar number must be exactly 12 digits!", "danger")
                 return redirect(url_for("edit_student", id=id))
 
-            # Aadhaar Uniqueness Check
             existing_aadhaar = Student.query.filter(
                 Student.aadhaar_no == aadhaar_no, Student.id != id
             ).first()
@@ -295,7 +289,6 @@ def create_app(config_class=Config):
                 )
                 return redirect(url_for("edit_student", id=id))
 
-            # 4. Room Capacity Validation
             if str(student.room_no) != str(room_no):
                 current_student_count = Student.query.filter_by(room_no=room_no).count()
                 if current_student_count >= 4:
@@ -304,8 +297,6 @@ def create_app(config_class=Config):
                         "danger",
                     )
                     return redirect(url_for("edit_student", id=id))
-
-            # ------------------------------------------------ #
 
             student.room_no = room_no
             student.name = name
@@ -330,7 +321,7 @@ def create_app(config_class=Config):
             "edit_student.html", student=student, rooms=available_rooms
         )
 
-    # --- 3. Delete Student Route ---
+    # --- Delete Student Route ---
     @app.route("/delete_student/<int:id>", methods=["POST"])
     @login_required
     def delete_student(id):
@@ -340,7 +331,7 @@ def create_app(config_class=Config):
         flash("Student record deleted successfully!", "success")
         return redirect(url_for("student_records"))
 
-    # --- 4. Add Admin Route ---
+    # --- Add Admin Route ---
     @app.route("/add_admin", methods=["GET", "POST"])
     @login_required
     def add_admin():
@@ -353,7 +344,8 @@ def create_app(config_class=Config):
                 flash("This Email ID is already registered!", "danger")
                 return redirect(url_for("add_admin"))
 
-            new_admin = User(email=email, password=password)
+            # नवीन admin पासवर्डसुद्धा हॅश करून सेव्ह करा
+            new_admin = User(email=email, password=generate_password_hash(password))
 
             db.session.add(new_admin)
             db.session.commit()
@@ -363,7 +355,7 @@ def create_app(config_class=Config):
 
         return render_template("add_admin.html")
 
-    # --- 5. View All Admins Route ---
+    # --- View All Admins Route ---
     @app.route("/all_admins")
     @login_required
     def all_admins():
@@ -410,16 +402,13 @@ def create_app(config_class=Config):
 
         return render_template("add_room.html")
 
-    # --- Delete Room Route (Updated with Student Check) ---
+    # --- Delete Room Route ---
     @app.route("/delete_room/<int:id>", methods=["POST"])
     @login_required
     def delete_room(id):
         room = Room.query.get_or_404(id)
-
-        # १. त्या रूममध्ये विद्यार्थी आहेत का ते तपासा
         students_in_room = Student.query.filter_by(room_no=room.room_number).count()
 
-        # २. विद्यार्थी असल्यास डिलीट रोखा आणि रेड वॉर्निंग दाखवा
         if students_in_room > 0:
             flash(
                 f"Room {room.room_number} cannot be deleted because"
@@ -428,12 +417,11 @@ def create_app(config_class=Config):
             )
             return redirect(url_for("rooms"))
 
-        # ३. रिकामी रूम असल्यास डिलीट करा
         try:
             db.session.delete(room)
             db.session.commit()
             flash(f"Room {room.room_number} deleted successfully!", "success")
-        except Exception as e:
+        except Exception:
             db.session.rollback()
             flash("Something went wrong while deleting the room.", "danger")
 
@@ -528,7 +516,6 @@ def create_app(config_class=Config):
     @login_required
     def download_receipt(fee_id):
         fee = Fee.query.get_or_404(fee_id)
-
         pdf_path = generate_fee_receipt(fee, fee.student)
 
         if not os.path.exists(pdf_path):
@@ -584,29 +571,6 @@ def create_app(config_class=Config):
             download_name="Students_List.xlsx",
             as_attachment=True,
         )
-
-    with app.app_context():
-        db.create_all()  # टेबल्स तयार होतील
-
-        # User मॉडेल इम्पोर्ट करा
-        from models import (
-            User,
-        )  # जर models.py बाहेर असेल तर 'from models import User' वापरा
-
-        # जर हा ईमेल डेटाबेसमध्ये नसेल, तर नवीन Admin बनवा
-        if not User.query.filter_by(email="admin@gmail.com").first():
-            # जर तुम्ही werkzeug पासवर्ड हॅशिंग वापरत असाल:
-            from werkzeug.security import generate_password_hash
-
-            hashed_password = generate_password_hash("admin123")
-
-            admin_user = User(
-                email="admin@gmail.com",
-                password=hashed_password,  # किंवा थेट "admin123" जर हॅशिंग नसेल तर
-            )
-            db.session.add(admin_user)
-            db.session.commit()
-            print("Default admin created!")
 
     return app
 
