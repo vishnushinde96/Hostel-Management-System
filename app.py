@@ -42,6 +42,7 @@ def create_app(config_class=Config):
 
     # --- डेटाबेस टेबल्स आणि डिफॉल्ट Admin युझर ऑटो-क्रिएशन ---
     with app.app_context():
+        db.drop_all()  # जुना डेटाबेस टेबल डिलीट करेल (VARCHAR(100) वाला)
         db.create_all()
 
         existing_admin = User.query.filter_by(email="admin@gmail.com").first()
