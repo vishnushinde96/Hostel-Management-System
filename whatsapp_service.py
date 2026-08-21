@@ -4,7 +4,8 @@ from twilio.rest import Client
 # Credentials
 TWILIO_ACCOUNT_SID = "AC69ef98f9144bcbbdedcf843500d7c47b"
 TWILIO_AUTH_TOKEN = "cdc651c88d71080865ac08855f......"  # इथे पूर्ण Auth Token पेस्ट करा
-TWILIO_WHATSAPP_NUMBER = "whatsapp:+14155238886"
+# whatsapp_service.py मध्ये ही ओळ बदला:
+TWILIO_WHATSAPP_NUMBER = "whatsapp:+17372508034"
 
 
 def send_whatsapp_receipt(student_mobile, pdf_url, student_name, amount, status):
