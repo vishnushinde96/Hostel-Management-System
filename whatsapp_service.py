@@ -1,10 +1,9 @@
 import os
 from twilio.rest import Client
 
-# Twilio Credentials
-TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "your_account_sid_here")
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "your_auth_token_here")
-# 'whatsapp:' प्रीफिक्स जोडणे अत्यंत आवश्यक आहे
+# Credentials
+TWILIO_ACCOUNT_SID = "AC69ef98f9144bcbbdedcf843500d7c47b"
+TWILIO_AUTH_TOKEN = "cdc651c88d71080865ac08855f......"  # इथे पूर्ण Auth Token पेस्ट करा
 TWILIO_WHATSAPP_NUMBER = "whatsapp:+14155238886"
 
 
@@ -12,7 +11,6 @@ def send_whatsapp_receipt(student_mobile, pdf_url, student_name, amount, status)
     try:
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-        # मोबाईल नंबरमधील मोकळी जागा काढून +91 फॉरमॅट करणे
         clean_no = str(student_mobile).strip().replace(" ", "").replace("-", "")
         if clean_no.startswith("+91"):
             formatted_mobile = f"whatsapp:{clean_no}"
