@@ -1,15 +1,19 @@
 import os
 from twilio.rest import Client
 
-# Credentials
-TWILIO_ACCOUNT_SID = "AC69ef98f9144bcbbdedcf843500d7c47b"
-TWILIO_AUTH_TOKEN = "cdc651c88d710808" + "65ac08855fd5c52f"
-TWILIO_WHATSAPP_NUMBER = "whatsapp:+17372508034"
-
 
 def send_whatsapp_receipt(student_mobile, pdf_url, student_name, amount, status):
+    # Render Environment Variables मधून Credentials वाचणे
+    account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+    auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+    twilio_whatsapp_number = "whatsapp:+17372508034"
+
+    if not account_sid or not auth_token:
+        print("Error: Twilio Credentials Environment Variables मध्ये सापडले नाहीत.")
+        return False
+
     try:
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        client = Client(account_sid, auth_token)
 
         clean_no = str(student_mobile).strip().replace(" ", "").replace("-", "")
         if clean_no.startswith("+91"):
@@ -28,7 +32,7 @@ def send_whatsapp_receipt(student_mobile, pdf_url, student_name, amount, status)
         )
 
         message = client.messages.create(
-            from_=TWILIO_WHATSAPP_NUMBER,
+            from_=twilio_whatsapp_number,
             body=message_body,
             media_url=[pdf_url],
             to=formatted_mobile,
